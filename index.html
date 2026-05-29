@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>28-Day Fitness Quest App</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f7fb;
+      color: #1d2433;
+    }
+    header {
+      background: linear-gradient(135deg, #243bff, #8f3fff);
+      color: white;
+      padding: 28px 18px;
+      text-align: center;
+      border-bottom-left-radius: 28px;
+      border-bottom-right-radius: 28px;
+    }
+    header h1 { margin: 0 0 8px; font-size: 30px; }
+    header p { margin: 0; opacity: .95; }
+    .wrap { max-width: 1100px; margin: auto; padding: 18px; }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: -34px;
+    }
+    .stat, .panel, .day-card, .exercise-card {
+      background: white;
+      border-radius: 18px;
+      box-shadow: 0 8px 20px rgba(20,30,60,.08);
+    }
+    .stat { padding: 16px; text-align: center; }
+    .stat strong { display: block; font-size: 24px; color: #243bff; }
+    .panel { padding: 18px; margin: 18px 0; }
+    .bar { height: 16px; background: #e8ebf7; border-radius: 999px; overflow: hidden; }
+    .bar span { display: block; height: 100%; width: 0%; background: linear-gradient(90deg,#30d158,#243bff); }
+    .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin: 16px 0; }
+    button {
+      border: 0;
+      border-radius: 999px;
+      padding: 11px 15px;
+      font-weight: bold;
+      cursor: pointer;
+      background: #e9ecff;
+      color: #243bff;
+    }
+    button.active, button.primary { background: #243bff; color: white; }
+    button.done { background: #30d158; color: white; }
+    button.copy { background: #fff3cd; color: #7a5100; }
+    button.reset { background: #ffe3e3; color: #c92a2a; }
+    .days { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+    .day-card { padding: 16px; border: 3px solid transparent; }
+    .day-card.completed { border-color: #30d158; }
+    .day-card h3 { margin: 0 0 8px; }
+    .tag { display:inline-block; padding:5px 9px; border-radius:999px; font-size:12px; font-weight:bold; background:#f0f2ff; color:#243bff; margin-bottom:8px; }
+    .exercise-list { padding-left: 18px; }
+    .exercise-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+    .exercise-card { padding: 16px; text-align: center; }
+    .emoji { font-size: 46px; margin: 8px 0; }
+    .exercise-card h3 { margin: 8px 0; }
+    .exercise-card p { color: #536079; min-height: 48px; }
+    .poster {
+      white-space: pre-wrap;
+      background: #101828;
+      color: white;
+      padding: 14px;
+      border-radius: 14px;
+      text-align: left;
+      font-family: Arial, sans-serif;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+    .hidden { display:none; }
+    footer { text-align:center; color:#6b7280; padding:30px 10px; }
+    @media (max-width: 720px) {
+      .stats { grid-template-columns: repeat(2, 1fr); margin-top: -22px; }
+      header h1 { font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <h1>🏆 28-Day Fitness Quest</h1>
+  <p>No equipment • 10–20 minutes daily • Finish quests, earn XP, level up</p>
+</header>
+
+<div class="wrap">
+  <section class="stats">
+    <div class="stat"><strong id="xp">0</strong>XP</div>
+    <div class="stat"><strong id="level">1</strong>Level</div>
+    <div class="stat"><strong id="doneCount">0</strong>Days Done</div>
+    <div class="stat"><strong id="streak">0</strong>Streak</div>
+  </section>
+
+  <section class="panel">
+    <h2>Progress</h2>
+    <div class="bar"><span id="progressBar"></span></div>
+    <p id="progressText">0 of 28 quests complete.</p>
+    <button class="reset" onclick="resetGame()">Reset Game</button>
+  </section>
+
+  <div class="tabs">
+    <button class="active" onclick="showTab('quest', this)">Daily Quest</button>
+    <button onclick="showTab('exercises', this)">Exercise Cards</button>
+    <button onclick="showTab('rules', this)">Game Rules</button>
+  </div>
+
+  <section id="quest" class="tab panel">
+    <h2>Choose Today’s Quest</h2>
+    <div id="days" class="days"></div>
+  </section>
+
+  <section id="exercises" class="tab panel hidden">
+    <h2>Copyable Exercise Picture Cards</h2>
+    <p>Click copy, then paste the card text into your notes, Canva, Facebook, or anywhere you want.</p>
+    <div id="exerciseGrid" class="exercise-grid"></div>
+  </section>
+
+  <section id="rules" class="tab panel hidden">
+    <h2>🎮 Level-Up Rules</h2>
+    <ul>
+      <li>Complete a day = +10 XP</li>
+      <li>Every 7 completed days = +100 bonus XP</li>
+      <li>Level up every 100 XP</li>
+      <li>Finish Day 28 = Boss Defeated 🏆</li>
+    </ul>
+  </section>
+</div>
+
+<footer>Made for GitHub Pages • Save as index.html and upload to your repo</footer>
+
+<script>
+const days = [
+  ['Foundation', '3×8 Incline Push-ups', '3×10 Squats', '3×20s Plank'],
+  ['Legs + Core', '2×8 Lunges/leg', '3×10 Glute Bridges', '2×10 Dead Bugs'],
+  ['Recovery', '20-min walk', 'Light stretching', 'Drink water'],
+  ['Foundation+', '3×10 Incline Push-ups', '3×12 Squats', '3×25s Plank'],
+  ['Back + Legs', '3×8 Lunges/leg', '3×12 Glute Bridges', '3×20s Superman Hold'],
+  ['Circuit', '2 rounds: 8 Push-ups', '12 Squats', '20s Plank'],
+  ['Recovery', 'Easy walk', 'Stretch hips', 'Rest well'],
+  ['Control', '3×8 Knee Push-ups', '3×12 Squats', '3×20s Dead Bug'],
+  ['Core', '3×25s Plank', '3×12 Glute Bridges', '2×10 Bird Dogs'],
+  ['Recovery', '15-min walk', 'Stretch shoulders', 'Breathe'],
+  ['Strength', '3×10 Knee Push-ups', '3×10 Lunges/leg', '3×30s Plank'],
+  ['Balance', '3×10 Step-back Lunges', '3×12 Calf Raises', '2×20s Side Plank'],
+  ['Circuit+', '3 rounds: 8 Push-ups', '12 Squats', '10 Bridges'],
+  ['Recovery', 'Walk', 'Stretch', 'Sleep early'],
+  ['Endurance', '3×12 Knee Push-ups', '3×15 Squats', '3×35s Plank'],
+  ['Leg Power', '3×12 Lunges/leg', '3×15 Glute Bridges', '3×15 Calf Raises'],
+  ['Core Power', '3×30s Plank', '3×12 Dead Bugs', '3×20s Superman'],
+  ['Recovery', '20-min walk', 'Easy mobility', 'Hydrate'],
+  ['Full Body', '3 rounds: 10 Push-ups', '15 Squats', '12 Bridges'],
+  ['Challenge', '4×8 Push-ups', '4×12 Squats', '3×40s Plank'],
+  ['Recovery', 'Walk', 'Stretch legs', 'Rest'],
+  ['Confidence', '4×10 Push-ups', '4×15 Squats', '3×45s Plank'],
+  ['Athletic', '3×12 Lunges/leg', '3×15 Bridges', '3×10 Mountain Climbers'],
+  ['Core Boss', '3×45s Plank', '3×20 Dead Bugs', '3×25s Side Plank'],
+  ['Recovery', 'Walk', 'Stretch full body', 'Prepare for test'],
+  ['Power Circuit', '4 rounds: 10 Push-ups', '15 Squats', '20s Plank'],
+  ['Fitness Test', 'Max Push-ups', 'Max Squats', 'Longest Plank'],
+  ['Victory Workout', 'Favorite 5 exercises', 'Move for 20 min', 'Celebrate 🏆']
+];
+
+const exercises = [
+  ['💪', 'Incline Push-up', 'Hands on table/chair. Body straight. Lower slowly, push back up.'],
+  ['🦵', 'Squat', 'Feet shoulder-width. Sit back like using a chair. Stand tall.'],
+  ['🧱', 'Plank', 'Elbows under shoulders. Tight belly. Straight body.'],
+  ['🚶', 'Lunge', 'Step back or forward. Bend both knees. Push back up.'],
+  ['🍑', 'Glute Bridge', 'Lie down. Feet flat. Lift hips and squeeze glutes.'],
+  ['🐞', 'Dead Bug', 'Lie on back. Move opposite arm and leg slowly.'],
+  ['🦸', 'Superman Hold', 'Lie on belly. Lift arms and legs. Hold strong.'],
+  ['🐦', 'Bird Dog', 'Hands and knees. Reach opposite arm and leg. Hold.'],
+  ['⛰️', 'Mountain Climber', 'High plank. Drive knees forward one at a time.'],
+  ['🦶', 'Calf Raise', 'Stand tall. Lift heels. Lower slowly.']
+];
+
+let completed = JSON.parse(localStorage.getItem('completedDays') || '[]');
+
+function renderDays(){
+  const box = document.getElementById('days');
+  box.innerHTML = '';
+  days.forEach((d, i) => {
+    const done = completed.includes(i);
+    box.innerHTML += `
+      <div class="day-card ${done ? 'completed' : ''}">
+        <span class="tag">Day ${i+1}: ${d[0]}</span>
+        <h3>${done ? '✅' : '🔥'} Quest ${i+1}</h3>
+        <ul class="exercise-list">${d.slice(1).map(x => `<li>${x}</li>`).join('')}</ul>
+        <button class="${done ? 'done' : 'primary'}" onclick="toggleDay(${i})">${done ? 'Completed' : 'Mark Complete +10 XP'}</button>
+      </div>`;
+  });
+  updateStats();
+}
+
+function renderExercises(){
+  const grid = document.getElementById('exerciseGrid');
+  grid.innerHTML = '';
+  exercises.forEach((e, i) => {
+    const card = `${e[0]} ${e[1]}\n\nHow to do it:\n${e[2]}\n\nBeginner tip: Move slow and stay controlled.`;
+    grid.innerHTML += `
+      <div class="exercise-card">
+        <div class="emoji">${e[0]}</div>
+        <h3>${e[1]}</h3>
+        <p>${e[2]}</p>
+        <button class="copy" onclick="copyCard(${i})">Copy Card</button>
+        <div class="poster" id="poster${i}">${card}</div>
+      </div>`;
+  });
+}
+
+function copyCard(i){
+  const text = document.getElementById('poster' + i).innerText;
+  navigator.clipboard.writeText(text).then(() => alert('Copied!'));
+}
+
+function toggleDay(i){
+  if(completed.includes(i)) completed = completed.filter(x => x !== i);
+  else completed.push(i);
+  completed.sort((a,b) => a-b);
+  localStorage.setItem('completedDays', JSON.stringify(completed));
+  renderDays();
+}
+
+function updateStats(){
+  const count = completed.length;
+  const bonus = Math.floor(count / 7) * 100;
+  const xp = count * 10 + bonus;
+  document.getElementById('xp').textContent = xp;
+  document.getElementById('level').textContent = Math.max(1, Math.floor(xp / 100) + 1);
+  document.getElementById('doneCount').textContent = count;
+  document.getElementById('streak').textContent = getStreak();
+  document.getElementById('progressBar').style.width = (count / 28 * 100) + '%';
+  document.getElementById('progressText').textContent = `${count} of 28 quests complete.`;
+}
+
+function getStreak(){
+  let streak = 0;
+  for(let i=0; i<28; i++){
+    if(completed.includes(i)) streak++;
+    else break;
+  }
+  return streak;
+}
+
+function showTab(id, btn){
+  document.querySelectorAll('.tab').forEach(t => t.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+  document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function resetGame(){
+  if(confirm('Reset all progress?')){
+    completed = [];
+    localStorage.removeItem('completedDays');
+    renderDays();
+  }
+}
+
+renderDays();
+renderExercises();
+</script>
+</body>
+</html>
