@@ -1,269 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>28-Day Fitness Quest App</title>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f5f7fb;
-      color: #1d2433;
-    }
-    header {
-      background: linear-gradient(135deg, #243bff, #8f3fff);
-      color: white;
-      padding: 28px 18px;
-      text-align: center;
-      border-bottom-left-radius: 28px;
-      border-bottom-right-radius: 28px;
-    }
-    header h1 { margin: 0 0 8px; font-size: 30px; }
-    header p { margin: 0; opacity: .95; }
-    .wrap { max-width: 1100px; margin: auto; padding: 18px; }
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-      margin-top: -34px;
-    }
-    .stat, .panel, .day-card, .exercise-card {
-      background: white;
-      border-radius: 18px;
-      box-shadow: 0 8px 20px rgba(20,30,60,.08);
-    }
-    .stat { padding: 16px; text-align: center; }
-    .stat strong { display: block; font-size: 24px; color: #243bff; }
-    .panel { padding: 18px; margin: 18px 0; }
-    .bar { height: 16px; background: #e8ebf7; border-radius: 999px; overflow: hidden; }
-    .bar span { display: block; height: 100%; width: 0%; background: linear-gradient(90deg,#30d158,#243bff); }
-    .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin: 16px 0; }
-    button {
-      border: 0;
-      border-radius: 999px;
-      padding: 11px 15px;
-      font-weight: bold;
-      cursor: pointer;
-      background: #e9ecff;
-      color: #243bff;
-    }
-    button.active, button.primary { background: #243bff; color: white; }
-    button.done { background: #30d158; color: white; }
-    button.copy { background: #fff3cd; color: #7a5100; }
-    button.reset { background: #ffe3e3; color: #c92a2a; }
-    .days { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
-    .day-card { padding: 16px; border: 3px solid transparent; }
-    .day-card.completed { border-color: #30d158; }
-    .day-card h3 { margin: 0 0 8px; }
-    .tag { display:inline-block; padding:5px 9px; border-radius:999px; font-size:12px; font-weight:bold; background:#f0f2ff; color:#243bff; margin-bottom:8px; }
-    .exercise-list { padding-left: 18px; }
-    .exercise-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
-    .exercise-card { padding: 16px; text-align: center; }
-    .emoji { font-size: 46px; margin: 8px 0; }
-    .exercise-card h3 { margin: 8px 0; }
-    .exercise-card p { color: #536079; min-height: 48px; }
-    .poster {
-      white-space: pre-wrap;
-      background: #101828;
-      color: white;
-      padding: 14px;
-      border-radius: 14px;
-      text-align: left;
-      font-family: Arial, sans-serif;
-      margin-top: 10px;
-      font-size: 14px;
-    }
-    .hidden { display:none; }
-    footer { text-align:center; color:#6b7280; padding:30px 10px; }
-    @media (max-width: 720px) {
-      .stats { grid-template-columns: repeat(2, 1fr); margin-top: -22px; }
-      header h1 { font-size: 24px; }
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>FitQuest 28 - Offline Fitness Game App</title>
+<style>
+:root{--bg:#eef3ff;--card:#fff;--ink:#172033;--muted:#68748a;--blue:#335cff;--purple:#8d5cff;--green:#23c36b;--orange:#ff9f1c;--red:#ff4d6d;--shadow:0 14px 35px rgba(37,54,100,.14)}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(180deg,#dfe8ff,#f7f9ff);color:var(--ink)}
+.app{max-width:430px;margin:0 auto;min-height:100vh;background:var(--bg);position:relative;padding-bottom:88px;box-shadow:0 0 0 1px rgba(0,0,0,.04)}
+.top{padding:22px 18px 18px;background:linear-gradient(135deg,var(--blue),var(--purple));color:white;border-bottom-left-radius:28px;border-bottom-right-radius:28px;position:sticky;top:0;z-index:5}.top small{opacity:.9}.top h1{margin:6px 0 4px;font-size:28px}.top p{margin:0;opacity:.92}.avatar{float:right;width:58px;height:58px;border-radius:18px;background:rgba(255,255,255,.2);display:grid;place-items:center;font-size:34px;border:2px solid rgba(255,255,255,.35)}
+.content{padding:16px}.card{background:var(--card);border-radius:24px;padding:16px;margin-bottom:14px;box-shadow:var(--shadow)}.row{display:flex;gap:10px;align-items:center;justify-content:space-between}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.stat{background:#f4f6ff;border-radius:18px;padding:12px;text-align:center}.stat b{display:block;color:var(--blue);font-size:22px}.bar{height:14px;border-radius:99px;background:#dfe5ff;overflow:hidden}.bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--green),var(--blue));transition:.3s}.title{font-size:20px;margin:0 0 10px}.muted{color:var(--muted);font-size:14px}.quest{border:2px solid transparent}.quest.done{border-color:var(--green);background:linear-gradient(180deg,#fff,#edfff5)}.badge{display:inline-block;border-radius:99px;padding:5px 10px;font-weight:bold;font-size:12px;background:#e9edff;color:var(--blue)}.ex{padding-left:18px;line-height:1.7}button{border:0;border-radius:16px;padding:12px 14px;font-weight:800;background:#e8edff;color:var(--blue);cursor:pointer}button.primary{background:var(--blue);color:white}button.green{background:var(--green);color:white}button.orange{background:#fff2d9;color:#875000}.days{display:grid;gap:12px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.exercise{min-height:185px;text-align:center}.icon{font-size:48px}.exercise h3{margin:8px 0 4px}.copybox{white-space:pre-wrap;background:#14213d;color:white;border-radius:18px;padding:14px;text-align:left;font-size:13px;margin-top:10px}.screen{display:none}.screen.active{display:block}.nav{position:fixed;left:50%;bottom:0;transform:translateX(-50%);max-width:430px;width:100%;background:white;border-top-left-radius:24px;border-top-right-radius:24px;box-shadow:0 -10px 30px rgba(0,0,0,.12);display:grid;grid-template-columns:repeat(4,1fr);padding:10px 8px 14px;z-index:8}.nav button{background:transparent;color:#7b8498;border-radius:16px;padding:8px 4px;font-size:12px}.nav button.active{background:#eef3ff;color:var(--blue)}.nav span{display:block;font-size:22px}.reward{font-size:38px}.pill{display:inline-block;margin:4px 4px 0 0;padding:8px 10px;border-radius:99px;background:#f1f4ff;color:#31405f;font-size:13px}.toast{position:fixed;bottom:92px;left:50%;transform:translateX(-50%);background:#172033;color:white;border-radius:99px;padding:12px 16px;display:none;z-index:9}.danger{background:#ffe8ec;color:#b00028}@media(min-width:431px){.app{margin-top:14px;margin-bottom:14px;border-radius:30px;overflow:hidden;min-height:calc(100vh - 28px)}.top{position:relative}.nav{bottom:14px;border-radius:24px}}
+</style>
 </head>
 <body>
-<header>
-  <h1>🏆 28-Day Fitness Quest</h1>
-  <p>No equipment • 10–20 minutes daily • Finish quests, earn XP, level up</p>
-</header>
-
-<div class="wrap">
-  <section class="stats">
-    <div class="stat"><strong id="xp">0</strong>XP</div>
-    <div class="stat"><strong id="level">1</strong>Level</div>
-    <div class="stat"><strong id="doneCount">0</strong>Days Done</div>
-    <div class="stat"><strong id="streak">0</strong>Streak</div>
-  </section>
-
-  <section class="panel">
-    <h2>Progress</h2>
-    <div class="bar"><span id="progressBar"></span></div>
-    <p id="progressText">0 of 28 quests complete.</p>
-    <button class="reset" onclick="resetGame()">Reset Game</button>
-  </section>
-
-  <div class="tabs">
-    <button class="active" onclick="showTab('quest', this)">Daily Quest</button>
-    <button onclick="showTab('exercises', this)">Exercise Cards</button>
-    <button onclick="showTab('rules', this)">Game Rules</button>
-  </div>
-
-  <section id="quest" class="tab panel">
-    <h2>Choose Today’s Quest</h2>
-    <div id="days" class="days"></div>
-  </section>
-
-  <section id="exercises" class="tab panel hidden">
-    <h2>Copyable Exercise Picture Cards</h2>
-    <p>Click copy, then paste the card text into your notes, Canva, Facebook, or anywhere you want.</p>
-    <div id="exerciseGrid" class="exercise-grid"></div>
-  </section>
-
-  <section id="rules" class="tab panel hidden">
-    <h2>🎮 Level-Up Rules</h2>
-    <ul>
-      <li>Complete a day = +10 XP</li>
-      <li>Every 7 completed days = +100 bonus XP</li>
-      <li>Level up every 100 XP</li>
-      <li>Finish Day 28 = Boss Defeated 🏆</li>
-    </ul>
-  </section>
-</div>
-
-<footer>Made for GitHub Pages • Save as index.html and upload to your repo</footer>
-
+<div class="app">
+  <header class="top"><div class="avatar">🦸</div><small>Offline Fitness Game</small><h1>FitQuest 28</h1><p>Train daily. Earn XP. Unlock rewards.</p></header>
+  <main class="content">
+    <section id="home" class="screen active">
+      <div class="card"><h2 class="title">Today’s Mission</h2><p class="muted" id="todayText">Choose a quest below and finish it.</p><div class="bar"><span id="homeBar"></span></div><p class="muted" id="homeProgress"></p><button class="primary" onclick="go('quest')">Start Quest</button></div>
+      <div class="stats"><div class="stat"><b id="xp">0</b>XP</div><div class="stat"><b id="level">1</b>Level</div><div class="stat"><b id="done">0</b>Done</div></div>
+      <div class="card"><h2 class="title">Current Rewards</h2><div id="rewards"></div></div>
+    </section>
+    <section id="quest" class="screen"><div class="card"><h2 class="title">28-Day Quest Map</h2><p class="muted">Tap complete after finishing a day. Progress saves offline on this device.</p></div><div id="dayList" class="days"></div></section>
+    <section id="library" class="screen"><div class="card"><h2 class="title">Exercise Picture Cards</h2><p class="muted">These are copyable cards you can paste anywhere, or screenshot like pictures.</p></div><div id="exerciseGrid" class="grid"></div></section>
+    <section id="profile" class="screen"><div class="card"><h2 class="title">Player Profile</h2><p class="muted">Your progress is saved with offline browser storage.</p><div class="stats"><div class="stat"><b id="pXP">0</b>XP</div><div class="stat"><b id="pLevel">1</b>Level</div><div class="stat"><b id="pPercent">0%</b>Complete</div></div></div><div class="card"><h2 class="title">Badges</h2><div id="badges"></div></div><div class="card"><h2 class="title">Reset</h2><p class="muted">Use only if you want to start again.</p><button class="danger" onclick="resetGame()">Reset App</button></div></section>
+  </main>
+  <nav class="nav"><button class="active" onclick="go('home',this)"><span>🏠</span>Home</button><button onclick="go('quest',this)"><span>🗺️</span>Quest</button><button onclick="go('library',this)"><span>🏋️</span>Cards</button><button onclick="go('profile',this)"><span>👤</span>Profile</button></nav>
+</div><div id="toast" class="toast"></div>
 <script>
-const days = [
-  ['Foundation', '3×8 Incline Push-ups', '3×10 Squats', '3×20s Plank'],
-  ['Legs + Core', '2×8 Lunges/leg', '3×10 Glute Bridges', '2×10 Dead Bugs'],
-  ['Recovery', '20-min walk', 'Light stretching', 'Drink water'],
-  ['Foundation+', '3×10 Incline Push-ups', '3×12 Squats', '3×25s Plank'],
-  ['Back + Legs', '3×8 Lunges/leg', '3×12 Glute Bridges', '3×20s Superman Hold'],
-  ['Circuit', '2 rounds: 8 Push-ups', '12 Squats', '20s Plank'],
-  ['Recovery', 'Easy walk', 'Stretch hips', 'Rest well'],
-  ['Control', '3×8 Knee Push-ups', '3×12 Squats', '3×20s Dead Bug'],
-  ['Core', '3×25s Plank', '3×12 Glute Bridges', '2×10 Bird Dogs'],
-  ['Recovery', '15-min walk', 'Stretch shoulders', 'Breathe'],
-  ['Strength', '3×10 Knee Push-ups', '3×10 Lunges/leg', '3×30s Plank'],
-  ['Balance', '3×10 Step-back Lunges', '3×12 Calf Raises', '2×20s Side Plank'],
-  ['Circuit+', '3 rounds: 8 Push-ups', '12 Squats', '10 Bridges'],
-  ['Recovery', 'Walk', 'Stretch', 'Sleep early'],
-  ['Endurance', '3×12 Knee Push-ups', '3×15 Squats', '3×35s Plank'],
-  ['Leg Power', '3×12 Lunges/leg', '3×15 Glute Bridges', '3×15 Calf Raises'],
-  ['Core Power', '3×30s Plank', '3×12 Dead Bugs', '3×20s Superman'],
-  ['Recovery', '20-min walk', 'Easy mobility', 'Hydrate'],
-  ['Full Body', '3 rounds: 10 Push-ups', '15 Squats', '12 Bridges'],
-  ['Challenge', '4×8 Push-ups', '4×12 Squats', '3×40s Plank'],
-  ['Recovery', 'Walk', 'Stretch legs', 'Rest'],
-  ['Confidence', '4×10 Push-ups', '4×15 Squats', '3×45s Plank'],
-  ['Athletic', '3×12 Lunges/leg', '3×15 Bridges', '3×10 Mountain Climbers'],
-  ['Core Boss', '3×45s Plank', '3×20 Dead Bugs', '3×25s Side Plank'],
-  ['Recovery', 'Walk', 'Stretch full body', 'Prepare for test'],
-  ['Power Circuit', '4 rounds: 10 Push-ups', '15 Squats', '20s Plank'],
-  ['Fitness Test', 'Max Push-ups', 'Max Squats', 'Longest Plank'],
-  ['Victory Workout', 'Favorite 5 exercises', 'Move for 20 min', 'Celebrate 🏆']
+const days=[
+['Day 1','Foundation','3×8 Incline Push-ups, 3×10 Squats, 3×20s Plank'],['Day 2','Leg Power','2×8 Lunges/leg, 3×10 Glute Bridges, 2×10 Dead Bugs'],['Day 3','Recovery','Easy walk + stretching'],['Day 4','Foundation+','3×10 Incline Push-ups, 3×12 Squats, 3×25s Plank'],['Day 5','Posterior Chain','3×8 Lunges/leg, 3×12 Glute Bridges, 3×15s Superman Holds'],['Day 6','Mini Circuit','2 rounds: 8 push-ups, 12 squats, 20s plank, 10 bridges'],['Day 7','Recovery','Rest, walk, stretch'],
+['Day 8','Core Control','3×8 Knee Push-ups, 3×12 Squats, 3×25s Plank'],['Day 9','Balance','3×8 Reverse Lunges/leg, 3×12 Bridges, 2×12 Dead Bugs'],['Day 10','Recovery','Walk 15 minutes'],['Day 11','Strength','3×10 Knee Push-ups, 3×15 Squats, 3×30s Plank'],['Day 12','Back & Core','3×15s Superman, 3×12 Bridges, 2×12 Dead Bugs'],['Day 13','Circuit','3 rounds: 8 push-ups, 12 squats, 20s plank'],['Day 14','Recovery','Rest and stretch'],
+['Day 15','Endurance','3×12 Knee Push-ups, 3×15 Squats, 3×35s Plank'],['Day 16','Leg Day','3×10 Lunges/leg, 3×15 Bridges, 2×14 Dead Bugs'],['Day 17','Recovery','Walk + mobility'],['Day 18','Stronger','4×8 Push-ups, 4×15 Squats, 3×40s Plank'],['Day 19','Core Boss','3×15s Superman, 3×15 Bridges, 3×12 Dead Bugs'],['Day 20','Circuit+','3 rounds: 10 push-ups, 15 squats, 30s plank, 12 bridges'],['Day 21','Recovery','Rest day'],
+['Day 22','Power','4×10 Push-ups, 4×18 Squats, 3×40s Plank'],['Day 23','Control','3×12 Lunges/leg, 3×18 Bridges, 3×14 Dead Bugs'],['Day 24','Recovery','Walk 20 minutes'],['Day 25','Full Body','4×10 Push-ups, 4×20 Squats, 3×45s Plank'],['Day 26','Prep','2 light rounds + stretching'],['Day 27','Fitness Test','Max safe push-ups, max squats in 1 min, longest plank'],['Day 28','Victory Workout','4 rounds: push-ups, squats, lunges, plank, bridges']
 ];
-
-const exercises = [
-  ['💪', 'Incline Push-up', 'Hands on table/chair. Body straight. Lower slowly, push back up.'],
-  ['🦵', 'Squat', 'Feet shoulder-width. Sit back like using a chair. Stand tall.'],
-  ['🧱', 'Plank', 'Elbows under shoulders. Tight belly. Straight body.'],
-  ['🚶', 'Lunge', 'Step back or forward. Bend both knees. Push back up.'],
-  ['🍑', 'Glute Bridge', 'Lie down. Feet flat. Lift hips and squeeze glutes.'],
-  ['🐞', 'Dead Bug', 'Lie on back. Move opposite arm and leg slowly.'],
-  ['🦸', 'Superman Hold', 'Lie on belly. Lift arms and legs. Hold strong.'],
-  ['🐦', 'Bird Dog', 'Hands and knees. Reach opposite arm and leg. Hold.'],
-  ['⛰️', 'Mountain Climber', 'High plank. Drive knees forward one at a time.'],
-  ['🦶', 'Calf Raise', 'Stand tall. Lift heels. Lower slowly.']
-];
-
-let completed = JSON.parse(localStorage.getItem('completedDays') || '[]');
-
-function renderDays(){
-  const box = document.getElementById('days');
-  box.innerHTML = '';
-  days.forEach((d, i) => {
-    const done = completed.includes(i);
-    box.innerHTML += `
-      <div class="day-card ${done ? 'completed' : ''}">
-        <span class="tag">Day ${i+1}: ${d[0]}</span>
-        <h3>${done ? '✅' : '🔥'} Quest ${i+1}</h3>
-        <ul class="exercise-list">${d.slice(1).map(x => `<li>${x}</li>`).join('')}</ul>
-        <button class="${done ? 'done' : 'primary'}" onclick="toggleDay(${i})">${done ? 'Completed' : 'Mark Complete +10 XP'}</button>
-      </div>`;
-  });
-  updateStats();
-}
-
-function renderExercises(){
-  const grid = document.getElementById('exerciseGrid');
-  grid.innerHTML = '';
-  exercises.forEach((e, i) => {
-    const card = `${e[0]} ${e[1]}\n\nHow to do it:\n${e[2]}\n\nBeginner tip: Move slow and stay controlled.`;
-    grid.innerHTML += `
-      <div class="exercise-card">
-        <div class="emoji">${e[0]}</div>
-        <h3>${e[1]}</h3>
-        <p>${e[2]}</p>
-        <button class="copy" onclick="copyCard(${i})">Copy Card</button>
-        <div class="poster" id="poster${i}">${card}</div>
-      </div>`;
-  });
-}
-
-function copyCard(i){
-  const text = document.getElementById('poster' + i).innerText;
-  navigator.clipboard.writeText(text).then(() => alert('Copied!'));
-}
-
-function toggleDay(i){
-  if(completed.includes(i)) completed = completed.filter(x => x !== i);
-  else completed.push(i);
-  completed.sort((a,b) => a-b);
-  localStorage.setItem('completedDays', JSON.stringify(completed));
-  renderDays();
-}
-
-function updateStats(){
-  const count = completed.length;
-  const bonus = Math.floor(count / 7) * 100;
-  const xp = count * 10 + bonus;
-  document.getElementById('xp').textContent = xp;
-  document.getElementById('level').textContent = Math.max(1, Math.floor(xp / 100) + 1);
-  document.getElementById('doneCount').textContent = count;
-  document.getElementById('streak').textContent = getStreak();
-  document.getElementById('progressBar').style.width = (count / 28 * 100) + '%';
-  document.getElementById('progressText').textContent = `${count} of 28 quests complete.`;
-}
-
-function getStreak(){
-  let streak = 0;
-  for(let i=0; i<28; i++){
-    if(completed.includes(i)) streak++;
-    else break;
-  }
-  return streak;
-}
-
-function showTab(id, btn){
-  document.querySelectorAll('.tab').forEach(t => t.classList.add('hidden'));
-  document.getElementById(id).classList.remove('hidden');
-  document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-}
-
-function resetGame(){
-  if(confirm('Reset all progress?')){
-    completed = [];
-    localStorage.removeItem('completedDays');
-    renderDays();
-  }
-}
-
-renderDays();
-renderExercises();
+const exercises=[['Incline Push-up','💪','Hands on table/wall. Body straight. Lower slowly, push back up.'],['Squat','🦵','Feet shoulder-width. Sit back like a chair. Stand tall.'],['Plank','🧱','Elbows under shoulders. Tight belly. Straight body.'],['Lunge','🚶','Step back or forward. Bend both knees. Keep chest up.'],['Glute Bridge','🌉','Lie down. Feet flat. Lift hips and squeeze.'],['Dead Bug','🐞','Lie on back. Move opposite arm and leg slowly.'],['Superman Hold','🦸','Lie on belly. Lift arms and legs gently.'],['Recovery Walk','🌿','Easy walk. Breathe calmly. Stretch after.']];
+let completed=JSON.parse(localStorage.getItem('fitquestCompleted')||'[]');
+function save(){localStorage.setItem('fitquestCompleted',JSON.stringify(completed));render()}
+function toggleDay(i){completed.includes(i)?completed=completed.filter(x=>x!==i):completed.push(i);toast(completed.includes(i)?'+10 XP! Quest complete':'Quest reopened');save()}
+function render(){let count=completed.length,xp=count*10+Math.floor(count/7)*100,level=Math.floor(xp/100)+1,pct=Math.round(count/28*100);['xp','pXP'].forEach(id=>document.getElementById(id).textContent=xp);['level','pLevel'].forEach(id=>document.getElementById(id).textContent=level);document.getElementById('done').textContent=count;document.getElementById('pPercent').textContent=pct+'%';document.getElementById('homeBar').style.width=pct+'%';document.getElementById('homeProgress').textContent=count+' of 28 quests complete';document.getElementById('todayText').textContent=count<28?'Next quest: '+days[count][0]+' - '+days[count][1]:'You finished the 28-day challenge!';document.getElementById('rewards').innerHTML=rewards(count);document.getElementById('badges').innerHTML=badges(count);document.getElementById('dayList').innerHTML=days.map((d,i)=>`<div class="card quest ${completed.includes(i)?'done':''}"><div class="row"><span class="badge">${d[0]}</span><span>${completed.includes(i)?'✅':'⭐'}</span></div><h2 class="title">${d[1]}</h2><ul class="ex"><li>${d[2].replaceAll(',','</li><li>')}</li></ul><button class="${completed.includes(i)?'green':'primary'}" onclick="toggleDay(${i})">${completed.includes(i)?'Completed':'Complete Quest'}</button></div>`).join('');document.getElementById('exerciseGrid').innerHTML=exercises.map((e,i)=>`<div class="card exercise"><div class="icon">${e[1]}</div><h3>${e[0]}</h3><p class="muted">${e[2]}</p><button class="orange" onclick="copyCard(${i})">Copy Card</button><div class="copybox" id="card${i}">${e[1]} ${e[0]}\n\n${e[2]}\n\nFitQuest 28</div></div>`).join('')}
+function rewards(c){let r=['🎒 Starter Hero']; if(c>=7)r.push('🥉 Week 1 Badge'); if(c>=14)r.push('🥈 Core Builder'); if(c>=21)r.push('🥇 Strength Hero'); if(c>=28)r.push('🏆 28-Day Champion'); return r.map(x=>`<span class="pill">${x}</span>`).join('')}
+function badges(c){return rewards(c)+(c<7?'<p class="muted">Complete 7 days to unlock your next badge.</p>':'')}
+function copyCard(i){navigator.clipboard.writeText(document.getElementById('card'+i).innerText).then(()=>toast('Exercise card copied'))}
+function go(id,btn){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active')); if(btn)btn.classList.add('active'); else document.querySelector(`.nav button[onclick*="${id}"]`)?.classList.add('active')}
+function resetGame(){if(confirm('Reset all progress?')){completed=[];save();toast('Progress reset')}}
+function toast(t){let el=document.getElementById('toast');el.textContent=t;el.style.display='block';setTimeout(()=>el.style.display='none',1500)}
+render();
 </script>
 </body>
 </html>
